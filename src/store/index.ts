@@ -1,7 +1,11 @@
 import { createStore } from 'vuex'
 
 export default createStore({
-  state: {},
+  state: () => {
+    return {
+      msg: 'You gotta fight!'
+    }
+  },
   getters: {},
   mutations: {},
   actions: {},
