@@ -6,8 +6,8 @@ export default createStore({
       msg: 'You gotta fight!'
     }
   },
-  getters: {},
   mutations: {},
   actions: {},
+  getters: {},
   modules: {}
 })
