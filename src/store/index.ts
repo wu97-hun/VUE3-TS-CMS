@@ -8,7 +8,7 @@ export default createStore({
   },
   mutations: {},
   actions: {},
-  // getters: {},
-  modules: {},
-  getters: {}
+  getters: {},
+  modules: {}
+  // getters: {}
 })
