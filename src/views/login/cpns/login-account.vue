@@ -24,9 +24,13 @@ import { rules } from '../config/account-config'
 import type { FormInstance } from 'element-plus'
 // 导入缓存工具
 import LocalCache from '@/utils/cache'
+// 使用vuex实例
+import { useStore } from 'vuex'
 
 export default defineComponent({
   setup() {
+    // 获取vuex实例
+    const store = useStore()
     // 给表单设置的ref
     const ruleFormRef = ref<FormInstance>()
 
@@ -48,6 +52,7 @@ export default defineComponent({
             LocalCache.deleteCache('name')
             LocalCache.deleteCache('password')
           }
+          store.dispatch('login/accountLoginAction', { ...account })
         }
       })
     }

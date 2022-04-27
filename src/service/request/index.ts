@@ -40,17 +40,17 @@ class WJRequest {
         if (this.showLoading) {
           this.loading = ElLoading.service({ lock: true })
         }
-        console.log('global request interceptor success')
+        // console.log('global request interceptor success')
         return config
       },
       (err) => {
-        console.log('global request interceptor fail')
+        // console.log('global request interceptor fail')
         return err
       }
     )
     this.instance.interceptors.response.use(
       (res) => {
-        console.log('global response interceptor success')
+        // console.log('global response interceptor success')
         this.loading?.close()
         if (res.data.returnCode === '-1001') {
           console.log('request error')
@@ -59,7 +59,7 @@ class WJRequest {
         }
       },
       (err) => {
-        console.log('global response interceptor fail')
+        // console.log('global response interceptor fail')
         this.loading?.close()
         if (err.response.status === 404) {
           console.log('404 error')

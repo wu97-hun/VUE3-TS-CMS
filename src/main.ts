@@ -6,6 +6,8 @@ import './assets/css/index.less'
 // import { globalRegister } from './global'
 // import wjRequest from './service'
 
+import { setupStore } from './store'
+
 import App from './App.vue'
 
 import router from './router'
@@ -17,6 +19,8 @@ const app = createApp(App)
 // app.use(globalRegister)
 app.use(router)
 app.use(store)
+
+setupStore()
 
 app.mount('#app')
 
