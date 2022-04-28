@@ -9,6 +9,7 @@ import {
 } from '@/service/login/login'
 import router from '@/router'
 import localCache from '@/utils/cache'
+import { mapMenusToRoutes } from '@/utils/map-menus'
 
 const loginModule: Module<ILoginState, IRootState> = {
   namespaced: true,
@@ -16,7 +17,7 @@ const loginModule: Module<ILoginState, IRootState> = {
     return {
       token: '',
       userInfo: {},
-      menus: {}
+      userMenus: {}
     }
   },
   mutations: {
@@ -27,7 +28,13 @@ const loginModule: Module<ILoginState, IRootState> = {
       state.userInfo = userInfo
     },
     changeUserMenus(state, userMenus: any) {
-      state.menus = userMenus
+      state.userMenus = userMenus
+      // 获得userMenus时映射动态路由
+      const routes = mapMenusToRoutes(userMenus)
+      // 注册动态路由
+      routes.forEach((route) => {
+        router.addRoute('main', route)
+      })
     }
   },
   actions: {
@@ -45,7 +52,7 @@ const loginModule: Module<ILoginState, IRootState> = {
       localCache.setCache('userInfo', userInfo)
 
       // 请求用户角色菜单树
-      const userMenusResult = await requestUserMenus(id)
+      const userMenusResult = await requestUserMenus(userInfo.role.id)
       const userMenus = userMenusResult.data
       commit('changeUserMenus', userMenus)
       localCache.setCache('userMenus', userMenus)
@@ -53,6 +60,7 @@ const loginModule: Module<ILoginState, IRootState> = {
       // 跳到首页
       router.push('/main')
     },
+    // 防止用户重新刷新导致vuex中数据消失
     loadLocalLogin({ commit }) {
       const token = localCache.getCache('token')
       if (token) {

@@ -1,7 +1,9 @@
 import { App } from 'vue'
 
-import registerElement from './register-element'
+// import registerElement from './register-element'
+import registerElementIcon from './register-element-icon'
 
 export function globalRegister(app: App): void {
-  registerElement(app)
+  // registerElement(app)
+  registerElementIcon(app)
 }

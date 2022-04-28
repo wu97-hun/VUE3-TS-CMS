@@ -3,8 +3,10 @@ import 'normalize.css'
 import './assets/css/index.less'
 
 // 注册element-plus组件库（新版本不用）
-// import { globalRegister } from './global'
+import { globalRegister } from './global'
 // import wjRequest from './service'
+
+// 注册图标
 
 import { setupStore } from './store'
 
@@ -15,11 +17,12 @@ import store from './store'
 
 const app = createApp(App)
 
-// 注册组件
-// app.use(globalRegister)
+// 注册图标组件
+app.use(globalRegister)
 app.use(router)
 app.use(store)
 
+// 注册用户重新刷新导致vuex中的数据消失
 setupStore()
 
 app.mount('#app')
