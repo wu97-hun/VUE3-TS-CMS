@@ -1,5 +1,8 @@
 <template>
   <div class="wj-from">
+    <div class="header">
+      <slot name="header"></slot>
+    </div>
     <el-form :label-width="labelWidth">
       <el-row>
         <template v-for="item in formItems" :key="item.label">
@@ -16,6 +19,7 @@
                   v-bind="item.otherOptions"
                   :placeholder="item.placeholder"
                   :show-password="item.type === 'password'"
+                  v-model="formData[`${item.field}`]"
                 />
               </template>
               <template v-else-if="item.type === 'select'">
@@ -28,6 +32,7 @@
                     v-for="option in item.options"
                     :key="option.value"
                     :value="option.value"
+                    v-model="formData[`${item.field}`]"
                   >
                     {{ option.title }}
                   </el-option>
@@ -37,6 +42,7 @@
                 <el-date-picker
                   v-bind="item.otherOptions"
                   style="width: 100%"
+                  v-model="formData[`${item.field}`]"
                 ></el-date-picker>
               </template>
             </el-form-item>
@@ -44,18 +50,26 @@
         </template>
       </el-row>
     </el-form>
+    <div class="footer">
+      <slot name="footer"></slot>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, ref, watch } from 'vue'
 import type { IFormItem } from '../types'
 
 export default defineComponent({
   props: {
+    modelValue: {
+      type: Object,
+      required: true
+    },
     formItems: {
+      // 当确定数组元素类型时需使用PropType
       type: Array as PropType<IFormItem[]>,
-      // 如果默认值是对象或者数组等引用类型贼一定要使用箭头函数设置默认值
+      // 如果默认值是对象或者数组等引用类型责一定要使用箭头函数设置默认值
       default: () => []
     },
     labelWidth: {
@@ -78,8 +92,18 @@ export default defineComponent({
       })
     }
   },
-  setup() {
-    return {}
+  emits: ['update:modelValue'],
+  setup(props, { emit }) {
+    const formData = ref({ ...props.modelValue })
+
+    // 实现组件双向绑定，因为要符合单向数据流所以浅拷贝了一个对象且使用深度监听
+    watch(formData, (newValue) => emit('update:modelValue', newValue), {
+      deep: true
+    })
+
+    return {
+      formData
+    }
   }
 })
 </script>

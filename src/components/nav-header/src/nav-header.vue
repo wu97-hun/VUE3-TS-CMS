@@ -4,7 +4,7 @@
       <component :is="isFoldIcon"></component>
     </el-icon>
     <div class="content">
-      <div>面包屑</div>
+      <wj-breadcrumb :breadcrumbs="breadcrumbs" />
       <user-info />
     </div>
   </div>
@@ -13,13 +13,22 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue'
 import UserInfo from './user-info.vue'
+import WjBreadcrumb, { IBreadcrumb } from '@/base-ui/breadcrumb'
+
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
+import { pathMapBreadcrumbs } from '@/utils/map-menus'
 
 export default defineComponent({
   components: {
-    UserInfo
+    UserInfo,
+    WjBreadcrumb
   },
   emits: ['foldChange'],
   setup(props, { emit }) {
+    const store = useStore()
+    const route = useRoute()
+
     const isFold = ref(false)
 
     const isFoldIcon = computed(() => (!isFold.value ? 'fold' : 'expand'))
@@ -28,9 +37,16 @@ export default defineComponent({
       isFold.value = !isFold.value
       emit('foldChange', isFold.value)
     }
+
+    // 面包屑数据
+    const breadcrumbs = computed(() =>
+      pathMapBreadcrumbs(store.state.login.userMenus, route.path)
+    )
+
     return {
       isFold,
       isFoldIcon,
+      breadcrumbs,
       handleFoldClick
     }
   }

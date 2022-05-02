@@ -16,8 +16,6 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    // 解决注册所有图标时候出现的错误
-    "suppressImplicitAnyIndexErrors": true,
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
   "include": [

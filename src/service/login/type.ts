@@ -10,7 +10,7 @@ export interface ILoginResult {
 }
 
 // 由于每次返回的data类型不确定所以使用泛型
-export interface IDataType<T = any> {
-  code: number
-  data: T
-}
+// export interface IDataType<T = any> {
+//   code: number
+//   data: T
+// }

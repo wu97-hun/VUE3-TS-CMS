@@ -1,5 +1,6 @@
 import wjRequest from '../index'
-import type { IAccount, IDataType, ILoginResult } from './type'
+import type { IAccount, ILoginResult } from './type'
+import type { IDataType } from '../types'
 
 enum LoginApi {
   AccountLogin = '/login',

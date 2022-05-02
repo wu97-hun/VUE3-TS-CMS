@@ -19,11 +19,12 @@ const app = createApp(App)
 
 // 注册图标组件
 app.use(globalRegister)
-app.use(router)
 app.use(store)
 
 // 注册用户重新刷新导致vuex中的数据消失
+// 需要先注册，这样匹配路由的时候才不会匹配至not-found
 setupStore()
+app.use(router)
 
 app.mount('#app')
 

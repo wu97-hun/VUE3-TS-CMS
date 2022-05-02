@@ -51,7 +51,6 @@ class WJRequest {
     this.instance.interceptors.response.use(
       (res) => {
         // console.log('global response interceptor success')
-        this.loading?.close()
         if (res.data.returnCode === '-1001') {
           console.log('request error')
         } else {
@@ -71,7 +70,7 @@ class WJRequest {
 
   // 此处泛型以请求者（需要返回的数据类型）为准
   // config后的泛型主要见./type.ts中的泛型传值
-  request<T>(config: WJRequestConfig<T>): Promise<T> {
+  request<T = any>(config: WJRequestConfig<T>): Promise<T> {
     return new Promise((resolve, reject) => {
       // 如果config中存在拦截器则对config进行处理
       if (config.interceptors?.requestInterceptor) {
@@ -105,20 +104,20 @@ class WJRequest {
     })
   }
 
-  get<T>(config: WJRequestConfig<T>): Promise<T> {
-    return this.request({ ...config, method: 'GET' })
+  get<T = any>(config: WJRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: 'GET' })
   }
 
-  post<T>(config: WJRequestConfig<T>): Promise<T> {
-    return this.request({ ...config, method: 'POST' })
+  post<T = any>(config: WJRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: 'POST' })
   }
 
-  delete<T>(config: WJRequestConfig<T>): Promise<T> {
-    return this.request({ ...config, method: 'DELETE' })
+  delete<T = any>(config: WJRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: 'DELETE' })
   }
 
-  patch<T>(config: WJRequestConfig<T>): Promise<T> {
-    return this.request({ ...config, method: 'PATCH' })
+  patch<T = any>(config: WJRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: 'PATCH' })
   }
 }
 
