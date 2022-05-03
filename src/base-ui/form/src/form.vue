@@ -19,7 +19,8 @@
                   v-bind="item.otherOptions"
                   :placeholder="item.placeholder"
                   :show-password="item.type === 'password'"
-                  v-model="formData[`${item.field}`]"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 />
               </template>
               <template v-else-if="item.type === 'select'">
@@ -27,12 +28,14 @@
                   v-bind="item.otherOptions"
                   :placeholder="item.placeholder"
                   style="width: 100%"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 >
                   <el-option
                     v-for="option in item.options"
                     :key="option.value"
                     :value="option.value"
-                    v-model="formData[`${item.field}`]"
+                    :label="option.title"
                   >
                     {{ option.title }}
                   </el-option>
@@ -42,7 +45,8 @@
                 <el-date-picker
                   v-bind="item.otherOptions"
                   style="width: 100%"
-                  v-model="formData[`${item.field}`]"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 ></el-date-picker>
               </template>
             </el-form-item>
@@ -57,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, watch } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import type { IFormItem } from '../types'
 
 export default defineComponent({
@@ -94,15 +98,22 @@ export default defineComponent({
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
-    const formData = ref({ ...props.modelValue })
+    // // 实现组件双向绑定
+    // const formData = ref({ ...props.modelValue })
 
-    // 实现组件双向绑定，因为要符合单向数据流所以浅拷贝了一个对象且使用深度监听
-    watch(formData, (newValue) => emit('update:modelValue', newValue), {
-      deep: true
-    })
+    // // 实现组件双向绑定，因为要符合单向数据流所以浅拷贝了一个对象且使用深度监听
+    // watch(formData, (newValue) => emit('update:modelValue', newValue), {
+    //   deep: true
+    // })
+
+    // 使用 model-value 和 update:modelValue 实现
+    const handleValueChange = (value: any, field: string) => {
+      emit('update:modelValue', { ...props.modelValue, [field]: value })
+    }
 
     return {
-      formData
+      // formData,
+      handleValueChange
     }
   }
 })
