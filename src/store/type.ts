@@ -3,7 +3,9 @@ import type { ISystemState } from './main/system/types'
 
 // 定义state的类型
 export interface IRootState {
-  msg: string
+  entireDepartment: any[]
+  entireRole: any[]
+  entireMenu: any[]
 }
 
 export interface IRootWithModule {

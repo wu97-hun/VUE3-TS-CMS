@@ -8,9 +8,10 @@
         <template v-for="item in formItems" :key="item.label">
           <el-col v-bind="colLayout">
             <el-form-item
+              v-if="!item.isHidden"
               :label="item.label"
               :rules="item.rules"
-              :style="ietmStyle"
+              :style="itemStyle"
             >
               <template
                 v-if="item.type === 'input' || item.type === 'password'"
@@ -80,7 +81,7 @@ export default defineComponent({
       type: String,
       default: '100px'
     },
-    ietmStyle: {
+    itemStyle: {
       type: Object,
       default: () => ({
         padding: '10px 40px'

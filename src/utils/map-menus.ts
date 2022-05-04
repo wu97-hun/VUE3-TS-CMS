@@ -67,6 +67,41 @@ export function pathMapBreadcrumbs(
   return breadcrumbs
 }
 
+// 获取用户权限
+export function mapMenusToPermissions(userMenus: any[]) {
+  const permission: string[] = []
+
+  const _recurseGetPermission = (menus: any[]) => {
+    for (const menu of menus) {
+      if (menu.type === 1 || menu.type === 2) {
+        _recurseGetPermission(menu.children ?? [])
+      } else if (menu.type === 3) {
+        permission.push(menu.permission)
+      }
+    }
+  }
+  _recurseGetPermission(userMenus)
+  return permission
+}
+
+// role中的ElTree回写
+export function menuMapLeafKeys(menuList: any[]) {
+  const leftKeys: number[] = []
+
+  const _recurseGetLeaf = (menuList: any[]) => {
+    for (const menu of menuList) {
+      if (menu.children) {
+        _recurseGetLeaf(menu.children)
+      } else {
+        leftKeys.push(menu.id)
+      }
+    }
+  }
+  _recurseGetLeaf(menuList)
+
+  return leftKeys
+}
+
 export { firstMenu }
 
 // // 根据当前地址判断左侧菜单的索引

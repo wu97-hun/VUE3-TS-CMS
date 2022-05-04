@@ -9,7 +9,7 @@ import {
 } from '@/service/login/login'
 import router from '@/router'
 import localCache from '@/utils/cache'
-import { mapMenusToRoutes } from '@/utils/map-menus'
+import { mapMenusToRoutes, mapMenusToPermissions } from '@/utils/map-menus'
 
 const loginModule: Module<ILoginState, IRootState> = {
   namespaced: true,
@@ -17,7 +17,8 @@ const loginModule: Module<ILoginState, IRootState> = {
     return {
       token: '',
       userInfo: {},
-      userMenus: {}
+      userMenus: [],
+      permissions: []
     }
   },
   mutations: {
@@ -29,16 +30,22 @@ const loginModule: Module<ILoginState, IRootState> = {
     },
     changeUserMenus(state, userMenus: any) {
       state.userMenus = userMenus
+
       // 获得userMenus时映射动态路由
       const routes = mapMenusToRoutes(userMenus)
+
       // 注册动态路由
       routes.forEach((route) => {
         router.addRoute('main', route)
       })
+
+      // 获取用户得权限
+      const permissions = mapMenusToPermissions(userMenus)
+      state.permissions = permissions
     }
   },
   actions: {
-    async accountLoginAction({ commit }, payload: IAccount) {
+    async accountLoginAction({ commit, dispatch }, payload: IAccount) {
       // 账户登录
       const loginResult = await accountLoginRequest(payload)
       const { token, id } = loginResult.data
@@ -57,11 +64,14 @@ const loginModule: Module<ILoginState, IRootState> = {
       commit('changeUserMenus', userMenus)
       localCache.setCache('userMenus', userMenus)
 
+      // 请求初始化数据(调用root里的action)
+      dispatch('getInitialDataAction', null, { root: true })
+
       // 跳到首页
       router.push('/main')
     },
     // 防止用户重新刷新导致vuex中数据消失
-    loadLocalLogin({ commit }) {
+    loadLocalLogin({ commit, dispatch }) {
       const token = localCache.getCache('token')
       if (token) {
         commit('changeToken', token)
@@ -76,6 +86,9 @@ const loginModule: Module<ILoginState, IRootState> = {
       if (userMenus) {
         commit('changeUserMenus', userMenus)
       }
+
+      // 请求初始化数据(调用root里的action)
+      dispatch('getInitialDataAction', null, { root: true })
     }
   },
   getters: {}
