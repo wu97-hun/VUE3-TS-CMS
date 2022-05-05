@@ -13,7 +13,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue'
 import UserInfo from './user-info.vue'
-import WjBreadcrumb, { IBreadcrumb } from '@/base-ui/breadcrumb'
+import WjBreadcrumb from '@/base-ui/breadcrumb'
 
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
@@ -34,7 +34,6 @@ export default defineComponent({
     const isFoldIcon = computed(() => (!isFold.value ? 'fold' : 'expand'))
 
     const handleFoldClick = () => {
-      isFold.value = !isFold.value
       emit('foldChange', isFold.value)
     }
 
